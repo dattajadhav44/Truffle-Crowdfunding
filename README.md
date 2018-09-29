@@ -41,3 +41,14 @@ The Crowdfunding smart contract has total 8 functions. let me talk about them on
 7. getInvestment:- This is function is to see the entire investor that have done by one investor accross all ideas.
 
 8. kill:- This is to destroy the smart contract when owner decides. 
+
+----------------------------------------------------------------------------
+Contract deployed address:
+
+<pre>Running migration: 2_deploy_contracts.js
+  Deploying CrowdFunding...
+  ... 0x46ecdb7c7cbcd1bf99e3b06f90c5024e8cad87d5e145be959322a8e2676a91db
+  CrowdFunding: 0x345ca3e014aaf5dca488057592ee47305d9b3e10
+Saving successful migration to network...
+  ... 0xf36163615f41ef7ed8f4a8f192149a0bf633fe1a2398ce001bf44c43dc7bdda0
+</pre>
