@@ -67,15 +67,16 @@ contract CrowdFunding {
     
     /**
     * Project values are indexed in return value:
-    * [0] -> Project.arrProperties.description
-    * [1] -> Project.arrProperties.goal
-    * [2] -> Project.arrProperties.deadline
-    * [3] -> Project.arrProperties.title
-    * [4] -> Project.arrProperties.gitUrl
-    * [5] -> Project.arrProperties.creator
-    * [6] -> Project.arrProperties.currentBalance
-    * [7] -> Project.arrProperties.InvestmentsCount
-    * [8] -> Project.arrProperties.InvestorsVoteCount
+    * [0] -> Project.ideaDetails.description
+    * [1] -> Project.ideaDetails.goal
+    * [2] -> Project.ideaDetails.deadline
+    * [3] -> Project.ideaDetails.title
+    * [4] -> Project.ideaDetails.gitUrl
+    * [5] -> Project.ideaDetails.creator
+    * [6] -> Project.ideaDetails.isIdeaExist
+    * [7] -> Project.ideaDetails.currentBalance
+    * [8] -> Project.ideaDetails.InvestmentsCount
+    * [9] -> Project.ideaDetails.InvestorsVoteCount
     */
     /* Retrive the complete Project details. Please note that the projects identied based on key values. as we can have several projects */
     function getProjectInfo(uint _id) public view returns (string, uint, uint, string, string, address, uint, uint, uint) {
@@ -148,10 +149,10 @@ contract CrowdFunding {
             revert();
         }
 
-       uint amount = investorsInIdeas[_id][msg.sender];
-       investorsInIdeas[_id][msg.sender] = 0;                     /* prevent re-entrancy attack */
+        uint amount = investorsInIdeas[_id][msg.sender];
+        investorsInIdeas[_id][msg.sender] = 0;                     /* prevent re-entrancy attack */
      
-       if (msg.sender.send(amount)) {                              /* send refund to the investor */
+        if (msg.sender.send(amount)) {                              /* send refund to the investor */
            emit LogRefundIssued(address(this), msg.sender, amount);
            return true;
         } else {
@@ -159,20 +160,20 @@ contract CrowdFunding {
             emit LogInformation("Refund did not send successfully");
             return false;
         }
-  }
+    }
     
     /* If funding goal has been met, transfer fund to project creator * [0] -> payout was successful */
     
     function payout(uint _id) public payable onlyOwner returns (bool successful) {
-       var ideaDetails = ideaInfo[_id];
+        var ideaDetails = ideaInfo[_id];
        
-       require(ideaDetails.currentBalance >= ideaDetails.goal && ideaCreators[msg.sender]); /* make a check wheather the goal is met of not and the person who is calling this realy idea creator */
+        require(ideaDetails.currentBalance >= ideaDetails.goal && ideaCreators[msg.sender]); /* make a check wheather the goal is met of not and the person who is calling this realy idea creator */
         
-       uint amount = ideaDetails.currentBalance;                /* Move the total fund of the project into the local variable */
+        uint amount = ideaDetails.currentBalance;                /* Move the total fund of the project into the local variable */
         
-       emit LogInformation("The perticular funding goal has been met");
+        emit LogInformation("The perticular funding goal has been met");
         
-       if (ideaDetails.creator.send(amount)) {
+        if (ideaDetails.creator.send(amount)) {
             delete numOfProjects[_id];                          /* Once the fund sent to idea creator blank out/ delete the record from array book */
             delete ideaInfo[_id];
             numOfIdeasCount--;
